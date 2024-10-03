@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">SamoPumpaj</string>
+
+    <string-array name="workout_list">
+        <item>Intro</item>
+        <item>Advanced</item>
+        <item>Pro</item>
+    </string-array>
+
+    <string-array name="training_list">
+        <item>Upper Body Push</item>
+        <item>Lower Body Focus</item>
+        <item>Upper Body Pull</item>
+    </string-array>
+
+    <string-array name="exercise_list">
+        <item>1. Squats</item>
+        <item>2. Romanian Deadlifts</item>
+        <item>3. Leg Press</item>
+        <item>4. Leg Curls</item>
+        <item>5. Lunges</item>
+        <item>6. Leg Extensions</item>
+    </string-array>
+
+    <string-array name="exercise_values">
+        <item>Quadriceps, Glutes</item>
+        <item>50</item>
+        <item>20.8.2025</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
