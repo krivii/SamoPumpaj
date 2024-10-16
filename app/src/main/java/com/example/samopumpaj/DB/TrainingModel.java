@@ -1,25 +1,34 @@
 package com.example.samopumpaj.DB;
 
+import android.util.Pair;
+
 public class TrainingModel {
 
-    private int id; // Primary key
+    private int id;
+    private String name;
+    private String lastVisit;
+    private int numberOfVisits;
+    private int workoutId;
 
-    private String name; // Training name
-    private String lastVisit; // Last visit date
-    private int numberOfVisits; // Number of visits
-    private int workoutId; // Foreign key referencing the Workout table
 
     // Constructor
-    public TrainingModel(String name, String lastVisit, int numberOfVisits, int workoutId) {
+    public TrainingModel(int id, String name, int workoutId) {
+        this.id = id;
         this.name = name;
-        this.lastVisit = lastVisit;
-        this.numberOfVisits = numberOfVisits;
         this.workoutId = workoutId;
     }
 
-    // Getters and Setters
+    public TrainingModel() {
+
+    }
+
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -52,5 +61,10 @@ public class TrainingModel {
 
     public void setWorkoutId(int workoutId) {
         this.workoutId = workoutId;
+    }
+
+    public void setVisitPair(Pair<Integer, String> visitPair) {
+        this.numberOfVisits = visitPair.first;
+        this.lastVisit = visitPair.second;
     }
 }

@@ -60,12 +60,13 @@ public class TrainingFragment extends Fragment {
         recyclerView = view.findViewById(R.id.trainingRV);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        setUpTrainingModels();
+        //setUpTrainingModels();
 
+        String[] modelNames = getResources().getStringArray(R.array.training_list);
         // Pass the click listener
         trainingRecycleViewAdapter = new TrainingRecycleViewAdapter(
                 getContext(),
-                trainingModels,
+                modelNames,
                 position -> {
                     // Call the MainActivity method on item click
                     ((MainActivity) getActivity()).onTrainingItemClick(position);
@@ -78,9 +79,9 @@ public class TrainingFragment extends Fragment {
 
     private void setUpTrainingModels() {
         String[] modelNames = getResources().getStringArray(R.array.training_list);
-        for (String name : modelNames) {
-            trainingModels.add(new TrainingModel(name, LocalDate.now().toString(), 0, 0)); //TODO
-        }
+        //for (String name : modelNames) {
+        //    trainingModels.add(new TrainingModel(name, LocalDate.now().toString(), 0, 0)); //TODO
+        //}
     }
 
     @Override

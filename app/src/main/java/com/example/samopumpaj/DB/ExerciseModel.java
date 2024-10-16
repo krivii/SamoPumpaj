@@ -2,7 +2,7 @@ package com.example.samopumpaj.DB;
 
 public class ExerciseModel {
 
-    private int id;  // Primary key
+    private int id;
 
     private String name;
 
@@ -16,23 +16,26 @@ public class ExerciseModel {
 
     private int numberOfUpdates;
 
-    private int trainingId;  // Foreign key referencing the Training table
+    private int trainingId;
 
-    // Constructor
-    public ExerciseModel(String name, String targetMuscle, String videoLink, String lastUpdate,
-                         int orderNumber, int numberOfUpdates, int trainingId) {
+    public ExerciseModel(int id, String name, String targetMuscle, String videoLink,  int orderNumber, int trainingId) {
+        this.id = id;
         this.name = name;
         this.targetMuscle = targetMuscle;
         this.videoLink = videoLink;
-        this.lastUpdate = lastUpdate;
         this.orderNumber = orderNumber;
-        this.numberOfUpdates = numberOfUpdates;
         this.trainingId = trainingId;
     }
 
-    // Getters and Setters
+    public ExerciseModel(){}
+
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

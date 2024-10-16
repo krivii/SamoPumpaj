@@ -75,9 +75,9 @@ public class ExerciseFragment extends Fragment {
 
     private void setUpExerciseModels() {
         String[] modelNames = getResources().getStringArray(R.array.exercise_list);
-        for (String name : modelNames) {
-            exerciseModels.add(new ExerciseModel(name, "Biceps",
-                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ", LocalDate.now().toString(), 1, 2,1));
-        }
+//        for (String name : modelNames) {
+//            exerciseModels.add(new ExerciseModel(name, "Biceps",
+//                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ", LocalDate.now().toString(), 1, 2,1));
+//        }
     }
 }

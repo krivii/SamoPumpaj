@@ -17,14 +17,14 @@ import java.util.ArrayList;
 public class TrainingRecycleViewAdapter extends RecyclerView.Adapter<TrainingRecycleViewAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<TrainingModel> trainingModels;
+    String [] trainingModels;
     private OnItemClickListener onItemClickListener; // Add listener interface
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public TrainingRecycleViewAdapter(Context context, ArrayList<TrainingModel> trainingModels, OnItemClickListener listener) {
+    public TrainingRecycleViewAdapter(Context context, String [] trainingModels, OnItemClickListener listener) {
         this.context = context;
         this.trainingModels = trainingModels;
         this.onItemClickListener = listener;
@@ -40,9 +40,12 @@ public class TrainingRecycleViewAdapter extends RecyclerView.Adapter<TrainingRec
 
     @Override
     public void onBindViewHolder(@NonNull TrainingRecycleViewAdapter.ViewHolder holder, int position) {
-        holder.tvTrainingName.setText(trainingModels.get(position).getName());
-        holder.tvDate.setText(trainingModels.get(position).getLastVisit().toString());
-        holder.tvVisits.setText(String.valueOf(trainingModels.get(position).getNumberOfVisits()));
+        holder.tvTrainingName.setText(trainingModels[position]);
+        holder.tvDate.setText("24.08.2024");
+        holder.tvVisits.setText(String.valueOf(5));
+        //holder.tvTrainingName.setText(trainingModels.get(position).getName());
+        //holder.tvDate.setText(trainingModels.get(position).getLastVisit().toString());
+        //holder.tvVisits.setText(String.valueOf(trainingModels.get(position).getNumberOfVisits()));
 
         // Set click listener on the entire item view
         holder.itemView.setOnClickListener(v -> {
@@ -54,7 +57,7 @@ public class TrainingRecycleViewAdapter extends RecyclerView.Adapter<TrainingRec
 
     @Override
     public int getItemCount() {
-        return trainingModels.size();
+        return trainingModels.length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

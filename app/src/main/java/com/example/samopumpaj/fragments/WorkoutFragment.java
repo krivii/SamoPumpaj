@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,12 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.samopumpaj.DB.DataBaseHelper;
 import com.example.samopumpaj.DB.WorkoutModel;
 import com.example.samopumpaj.MainActivity;
 import com.example.samopumpaj.R;
 import com.example.samopumpaj.RVAdapters.WorkoutRecycleViewAdapter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class WorkoutFragment extends Fragment implements WorkoutRecycleViewAdapter.OnItemClickListener {
@@ -24,6 +25,8 @@ public class WorkoutFragment extends Fragment implements WorkoutRecycleViewAdapt
     private RecyclerView recyclerView;
     private WorkoutRecycleViewAdapter workoutRecycleViewAdapter;
     private ArrayList<WorkoutModel> workoutModels;
+    private String[] modelNames;
+
 
 
     public WorkoutFragment() {
@@ -39,10 +42,11 @@ public class WorkoutFragment extends Fragment implements WorkoutRecycleViewAdapt
         recyclerView = view.findViewById(R.id.workoutRV);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
         // Set up WorkoutModels
-        setUpWorkoutModels();
-        String[] modelNames = getResources().getStringArray(R.array.workout_list);
-        workoutRecycleViewAdapter = new WorkoutRecycleViewAdapter(getContext(), modelNames, this);
+        setUpWorkoutModels1();
+        modelNames = getResources().getStringArray(R.array.workout_list);
+        workoutRecycleViewAdapter = new WorkoutRecycleViewAdapter(getContext(), workoutModels, this);
         recyclerView.setAdapter(workoutRecycleViewAdapter);
 
         return view;
@@ -55,10 +59,28 @@ public class WorkoutFragment extends Fragment implements WorkoutRecycleViewAdapt
         //}
     }
 
+    private void setUpWorkoutModels1() {
+
+        DataBaseHelper dbHelper = new DataBaseHelper(getContext());
+        workoutModels = new ArrayList<>();
+
+        // Creating 3 WorkoutModel rows
+        workoutModels.add(new WorkoutModel(1, "Full Body Workout"));
+        workoutModels.add(new WorkoutModel(2, "Cardio Blast"));
+        workoutModels.add(new WorkoutModel(3, "Strength Training"));
+
+        for (WorkoutModel workoutModel : workoutModels) {
+            boolean succ = dbHelper.addWorkout(workoutModel);
+            Toast.makeText(getContext(), "Success=" + succ, Toast.LENGTH_SHORT).show() ;
+        }
+    }
+
     @Override
     public void onItemClick(int position) {
         // Reset the workout models
-        workoutModels.clear();
+        for (int i = 0; i < modelNames.length; i++) {
+            modelNames[i] = null;
+        }
 
         // Switch to TrainingFragment
         TrainingFragment trainingFragment = new TrainingFragment();
@@ -68,6 +90,8 @@ public class WorkoutFragment extends Fragment implements WorkoutRecycleViewAdapt
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        workoutModels.clear(); // Clear models when the fragment is destroyed
+        for (int i = 0; i < modelNames.length; i++) {
+            modelNames[i] = null;
+        }
     }
 }

@@ -17,14 +17,14 @@ import java.util.ArrayList;
 public class WorkoutRecycleViewAdapter extends RecyclerView.Adapter<WorkoutRecycleViewAdapter.ViewHolder> {
 
     private final Context context;
-    private final String [] workoutModels;
+    private final ArrayList<WorkoutModel> workoutModels;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public WorkoutRecycleViewAdapter(Context context, String [] workoutModels, OnItemClickListener listener) {
+    public WorkoutRecycleViewAdapter(Context context, ArrayList<WorkoutModel> workoutModels, OnItemClickListener listener) {
         this.context = context;
         this.workoutModels = workoutModels;
         this.listener = listener;
@@ -40,25 +40,29 @@ public class WorkoutRecycleViewAdapter extends RecyclerView.Adapter<WorkoutRecyc
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvWworkoutName.setText(workoutModels[position]);
-        holder.tvDate.setText("24.08.2024");
-        holder.tvVisits.setText(String.valueOf(5));
+        // Get the WorkoutModel for the current position
+        WorkoutModel workout = workoutModels.get(position);
 
+        // Set data into the TextViews
+        holder.tvWorkoutName.setText(workout.getName());
+        holder.tvVisits.setText(String.valueOf(workout.getNumberOfVisits()));
+
+        // Handle item click
         holder.itemView.setOnClickListener(v -> listener.onItemClick(position));
     }
 
     @Override
     public int getItemCount() {
-        return workoutModels.length;
+        return workoutModels.size();  // Return the size of the ArrayList
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvWworkoutName, tvDate, tvVisits;
+        TextView tvWorkoutName, tvDate, tvVisits;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvWworkoutName = itemView.findViewById(R.id.workoutName_textView);
+            tvWorkoutName = itemView.findViewById(R.id.workoutName_textView);
             tvDate = itemView.findViewById(R.id.date_textView);
             tvVisits = itemView.findViewById(R.id.nbVisits_textView);
         }
