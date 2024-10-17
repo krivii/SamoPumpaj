@@ -1,6 +1,8 @@
 package com.example.samopumpaj.DB;
 
 
+import java.time.LocalDateTime;
+
 public class BodyMeasurementModel {
 
 
@@ -20,7 +22,7 @@ public class BodyMeasurementModel {
 
     private double rightLeg;
 
-    private String date;
+    private LocalDateTime date;
 
 
 }

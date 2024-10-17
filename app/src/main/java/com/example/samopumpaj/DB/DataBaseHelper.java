@@ -18,15 +18,15 @@ import java.util.List;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Define the database name and version
-    private static final String DATABASE_NAME = "pumpaj.db";
+    private static final String DATABASE_NAME = "pumpaj1.db";
     private static final int DATABASE_VERSION = 2;
 
     // Table and column names
-    public static final String TABLE_WORKOUT = "Workout";
-    public static final String TABLE_VISIT = "Visit";
-    public static final String TABLE_TRAINING = "Training";
-    public static final String TABLE_EXERCISE = "Exercise";
-    public static final String TABLE_RECORD = "Lifting record";
+    public static final String TABLE_WORKOUT = "Workouts";
+    public static final String TABLE_VISIT = "Visits";
+    public static final String TABLE_TRAINING = "Trainings";
+    public static final String TABLE_EXERCISE = "Exercises";
+    public static final String TABLE_RECORD = "LiftingRecords";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_LAST_VISIT = "lastVisit";
@@ -99,10 +99,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 // Retrieve data from the cursor
                 int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
                 String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                int numberOfVisits = cursor.getInt(cursor.getColumnIndex(COLUMN_NUMBER_OF_VISITS));
+                int numberOfVisits = getWorkoutLastVisit(id);
 
                 // Create a new WorkoutModel object and add it to the list
                 WorkoutModel workout = new WorkoutModel(id, name);
+                workout.setNumberOfVisits(numberOfVisits);
                 workoutList.add(workout);
             } while (cursor.moveToNext());
         }
@@ -119,7 +120,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Query to count the number of visits for the given workout ID
-        String countQuery = "SELECT COUNT(*) FROM " + TABLE_VISIT + " WHERE workoutFk = workoutId";
+        String countQuery = "SELECT COUNT(*) FROM " + TABLE_VISIT + " WHERE workoutFk =?";
         Cursor cursor = db.rawQuery(countQuery, new String[]{String.valueOf(workoutId)});
 
         int visitCount = 0;
@@ -150,9 +151,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 TrainingModel training = new TrainingModel();
-                training.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                int id = cursor.getColumnIndexOrThrow(COLUMN_ID);
+                Pair<Integer, String> visitPair = getTrainingVisits(training.getId());
+
+                training.setId(cursor.getInt(id));
                 training.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
-                training.setWorkoutId(cursor.getInt(cursor.getColumnIndexOrThrow("workoutId")));
+                training.setWorkoutFk(cursor.getInt(cursor.getColumnIndexOrThrow("workoutId")));
+                training.setNumberOfVisits(visitPair.first);
+                training.setLastVisit(visitPair.second);
 
                 trainingList.add(training);
             } while (cursor.moveToNext());
@@ -238,7 +244,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 exercise.setTargetMuscle(cursor.getString(cursor.getColumnIndex("targetMuscle")));
                 exercise.setVideoLink(cursor.getString(cursor.getColumnIndex("videoLink")));
                 exercise.setOrderNumber(cursor.getInt(cursor.getColumnIndex("orderNumber")));
-                exercise.setTrainingId(cursor.getInt(cursor.getColumnIndex("trainingId")));
+                exercise.setTrainingFk(cursor.getInt(cursor.getColumnIndex("trainingId")));
 
                 // Add the exercise to the list
                 exerciseList.add(exercise);
@@ -268,7 +274,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             exercise.setTargetMuscle(cursor.getString(cursor.getColumnIndex("targetMuscle")));
             exercise.setVideoLink(cursor.getString(cursor.getColumnIndex("videoLink")));
             exercise.setOrderNumber(cursor.getInt(cursor.getColumnIndex("orderNumber")));
-            exercise.setTrainingId(cursor.getInt(cursor.getColumnIndex("trainingId")));
+            exercise.setTrainingFk(cursor.getInt(cursor.getColumnIndex("trainingId")));
         }
 
         // Close the cursor and the database

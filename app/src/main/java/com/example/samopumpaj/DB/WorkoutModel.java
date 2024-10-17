@@ -6,6 +6,7 @@ public class WorkoutModel {
     private String name;
     private int numberOfVisits;
 
+
     public WorkoutModel(int id, String name) {
         this.id = id;
         this.name = name;;

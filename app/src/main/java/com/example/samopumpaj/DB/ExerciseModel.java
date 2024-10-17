@@ -16,15 +16,15 @@ public class ExerciseModel {
 
     private int numberOfUpdates;
 
-    private int trainingId;
+    private int trainingFk;
 
-    public ExerciseModel(int id, String name, String targetMuscle, String videoLink,  int orderNumber, int trainingId) {
+    public ExerciseModel(int id, String name, String targetMuscle, String videoLink,  int orderNumber, int trainingFk) {
         this.id = id;
         this.name = name;
         this.targetMuscle = targetMuscle;
         this.videoLink = videoLink;
         this.orderNumber = orderNumber;
-        this.trainingId = trainingId;
+        this.trainingFk = trainingFk;
     }
 
     public ExerciseModel(){}
@@ -86,11 +86,11 @@ public class ExerciseModel {
         this.numberOfUpdates = numberOfUpdates;
     }
 
-    public int getTrainingId() {
-        return trainingId;
+    public int getTrainingFk() {
+        return trainingFk;
     }
 
-    public void setTrainingId(int trainingId) {
-        this.trainingId = trainingId;
+    public void setTrainingFk(int trainingFk) {
+        this.trainingFk = trainingFk;
     }
 }

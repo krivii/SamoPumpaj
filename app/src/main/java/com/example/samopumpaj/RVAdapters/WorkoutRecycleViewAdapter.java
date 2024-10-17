@@ -13,18 +13,19 @@ import com.example.samopumpaj.DB.WorkoutModel;
 import com.example.samopumpaj.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkoutRecycleViewAdapter extends RecyclerView.Adapter<WorkoutRecycleViewAdapter.ViewHolder> {
 
     private final Context context;
-    private final ArrayList<WorkoutModel> workoutModels;
+    private final List<WorkoutModel> workoutModels;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public WorkoutRecycleViewAdapter(Context context, ArrayList<WorkoutModel> workoutModels, OnItemClickListener listener) {
+    public WorkoutRecycleViewAdapter(Context context, List<WorkoutModel> workoutModels, OnItemClickListener listener) {
         this.context = context;
         this.workoutModels = workoutModels;
         this.listener = listener;

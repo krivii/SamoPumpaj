@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.samopumpaj.DB.DataBaseHelper;
 import com.example.samopumpaj.DB.TrainingModel;
 import com.example.samopumpaj.MainActivity;
 import com.example.samopumpaj.R;
@@ -19,13 +20,15 @@ import com.example.samopumpaj.RVAdapters.TrainingRecycleViewAdapter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrainingFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TrainingRecycleViewAdapter trainingRecycleViewAdapter;
-    private ArrayList<TrainingModel> trainingModels = new ArrayList<>();
+    private List<TrainingModel> trainingModels;
     private FragmentTitleListener fragmentTitleListener;
+    private int workoutId;
 
     public TrainingFragment() {
         // Required empty public constructor
@@ -38,6 +41,15 @@ public class TrainingFragment extends Fragment {
         args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            // Retrieve the workout data from the arguments
+            workoutId = getArguments().getInt("workoutId");
+        }
     }
 
     @Override
@@ -60,13 +72,13 @@ public class TrainingFragment extends Fragment {
         recyclerView = view.findViewById(R.id.trainingRV);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //setUpTrainingModels();
+        setUpTrainingModels();
 
-        String[] modelNames = getResources().getStringArray(R.array.training_list);
+
         // Pass the click listener
         trainingRecycleViewAdapter = new TrainingRecycleViewAdapter(
                 getContext(),
-                modelNames,
+                trainingModels,
                 position -> {
                     // Call the MainActivity method on item click
                     ((MainActivity) getActivity()).onTrainingItemClick(position);
@@ -78,10 +90,9 @@ public class TrainingFragment extends Fragment {
     }
 
     private void setUpTrainingModels() {
-        String[] modelNames = getResources().getStringArray(R.array.training_list);
-        //for (String name : modelNames) {
-        //    trainingModels.add(new TrainingModel(name, LocalDate.now().toString(), 0, 0)); //TODO
-        //}
+        DataBaseHelper dbHelper = new DataBaseHelper(getContext());
+        trainingModels = dbHelper.getAllTrainingsByWorkoutId(workoutId);
+
     }
 
     @Override

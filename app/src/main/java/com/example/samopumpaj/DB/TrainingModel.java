@@ -8,14 +8,14 @@ public class TrainingModel {
     private String name;
     private String lastVisit;
     private int numberOfVisits;
-    private int workoutId;
+    private int workoutFk;
 
 
     // Constructor
-    public TrainingModel(int id, String name, int workoutId) {
+    public TrainingModel(int id, String name, int workoutFk) {
         this.id = id;
         this.name = name;
-        this.workoutId = workoutId;
+        this.workoutFk = workoutFk;
     }
 
     public TrainingModel() {
@@ -55,12 +55,12 @@ public class TrainingModel {
         this.numberOfVisits = numberOfVisits;
     }
 
-    public int getWorkoutId() {
-        return workoutId;
+    public int getWorkoutFk() {
+        return workoutFk;
     }
 
-    public void setWorkoutId(int workoutId) {
-        this.workoutId = workoutId;
+    public void setWorkoutFk(int workoutFk) {
+        this.workoutFk = workoutFk;
     }
 
     public void setVisitPair(Pair<Integer, String> visitPair) {

@@ -10,21 +10,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.samopumpaj.DB.TrainingModel;
+import com.example.samopumpaj.DB.WorkoutModel;
 import com.example.samopumpaj.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrainingRecycleViewAdapter extends RecyclerView.Adapter<TrainingRecycleViewAdapter.ViewHolder> {
 
     Context context;
-    String [] trainingModels;
+    private List<TrainingModel> trainingModels;
     private OnItemClickListener onItemClickListener; // Add listener interface
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public TrainingRecycleViewAdapter(Context context, String [] trainingModels, OnItemClickListener listener) {
+    public TrainingRecycleViewAdapter(Context context, List<TrainingModel>  trainingModels, OnItemClickListener listener) {
         this.context = context;
         this.trainingModels = trainingModels;
         this.onItemClickListener = listener;
@@ -40,12 +42,11 @@ public class TrainingRecycleViewAdapter extends RecyclerView.Adapter<TrainingRec
 
     @Override
     public void onBindViewHolder(@NonNull TrainingRecycleViewAdapter.ViewHolder holder, int position) {
-        holder.tvTrainingName.setText(trainingModels[position]);
-        holder.tvDate.setText("24.08.2024");
-        holder.tvVisits.setText(String.valueOf(5));
-        //holder.tvTrainingName.setText(trainingModels.get(position).getName());
-        //holder.tvDate.setText(trainingModels.get(position).getLastVisit().toString());
-        //holder.tvVisits.setText(String.valueOf(trainingModels.get(position).getNumberOfVisits()));
+        TrainingModel trainingModel = trainingModels.get(position);
+        holder.tvTrainingName.setText(trainingModel.getName());
+        holder.tvDate.setText(trainingModel.getLastVisit().toString());
+        holder.tvVisits.setText(trainingModel.getNumberOfVisits());
+
 
         // Set click listener on the entire item view
         holder.itemView.setOnClickListener(v -> {
@@ -57,7 +58,7 @@ public class TrainingRecycleViewAdapter extends RecyclerView.Adapter<TrainingRec
 
     @Override
     public int getItemCount() {
-        return trainingModels.length;
+        return trainingModels.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
