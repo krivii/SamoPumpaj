@@ -18,7 +18,7 @@ import java.util.List;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Define the database name and version
-    private static final String DATABASE_NAME = "pumpaj1.db";
+    private static final String DATABASE_NAME = "pumpaj.db";
     private static final int DATABASE_VERSION = 2;
 
     // Table and column names
@@ -33,6 +33,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NUMBER_OF_VISITS = "numberOfVisits";
     private static final String COLUMN_KILO = "kilos";
     private static final String COLUMN_DATE_TIME = "dateTime";
+    public static final String WORKOUT_FK = "workoutFk";
 
     // Constructor
     public DataBaseHelper(@Nullable Context context) {
@@ -145,18 +146,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         List<TrainingModel> trainingList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String query = "SELECT * FROM " + TABLE_TRAINING + " WHERE workoutId = ?";
+        String query = "SELECT * FROM " + TABLE_TRAINING + " WHERE workoutFk = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(workoutId)});
 
         if (cursor.moveToFirst()) {
             do {
                 TrainingModel training = new TrainingModel();
-                int id = cursor.getColumnIndexOrThrow(COLUMN_ID);
-                Pair<Integer, String> visitPair = getTrainingVisits(training.getId());
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                Pair<Integer, String> visitPair = getTrainingVisits(id); //TODO: tukaj pade.
 
-                training.setId(cursor.getInt(id));
+                training.setId(id);
                 training.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
-                training.setWorkoutFk(cursor.getInt(cursor.getColumnIndexOrThrow("workoutId")));
+                training.setWorkoutFk(cursor.getInt(cursor.getColumnIndexOrThrow(WORKOUT_FK)));
                 training.setNumberOfVisits(visitPair.first);
                 training.setLastVisit(visitPair.second);
 
@@ -183,19 +184,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         countCursor.close();
 
         // Get the most recent visit date (lastVisit) with the same trainingFkId
-        String lastVisitQuery = "SELECT visitDate FROM " + TABLE_VISIT + " WHERE trainingFk = ? ORDER BY dateTime DESC LIMIT 1";
+        String lastVisitQuery = "SELECT dateTime FROM " + TABLE_VISIT + " WHERE trainingFk = ? ORDER BY dateTime DESC LIMIT 1";
         Cursor lastVisitCursor = db.rawQuery(lastVisitQuery, new String[]{String.valueOf(trainingId)});
         String lastVisit = null;
         if (lastVisitCursor.moveToFirst()) {
             String dateTimeString = lastVisitCursor.getString(0);
             LocalDateTime dateTime = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                dateTime = LocalDateTime.parse(dateTimeString);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                lastVisit = dateTime.format(formatter);
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                dateTime = LocalDateTime.parse(dateTimeString, inputFormatter);
+                lastVisit = dateTime.format(outputFormatter);
             }
-
         }
+
         lastVisitCursor.close();
         db.close();
 
@@ -212,7 +214,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_KILO, visit.getKilos());
         values.put(COLUMN_DATE_TIME, visit.getDateTime().toString());
-        values.put("workoutFk", visit.getWorkoutFk());
+        values.put(WORKOUT_FK, visit.getWorkoutFk());
         values.put("trainingFk", visit.getTrainingFk());
 
         // Insert the new row into the Visits table
@@ -232,7 +234,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // SQL query to get all exercises with the specific training ID, ordered by order number
-        String query = "SELECT * FROM " + TABLE_EXERCISE + " WHERE trainingId = ? ORDER BY orderNumber ASC";
+        String query = "SELECT * FROM " + TABLE_EXERCISE + " WHERE trainingFk = ? ORDER BY orderNumber ASC";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(trainingId)});
 
         // Iterate through the results and create ExerciseModel instances

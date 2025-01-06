@@ -18,16 +18,18 @@ import com.example.samopumpaj.DB.ExerciseModel;
 import com.example.samopumpaj.R;
 import com.example.samopumpaj.fragments.SingleExerciseFragment;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ExerciseRecycleViewAdapter extends RecyclerView.Adapter<ExerciseRecycleViewAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<ExerciseModel> exerciseModels;
+    private List<ExerciseModel> exerciseModels;
+    private TrainingRecycleViewAdapter.OnItemClickListener onItemClickListener;
 
-    public ExerciseRecycleViewAdapter(Context context, ArrayList<ExerciseModel> exerciseModels) {
+    public ExerciseRecycleViewAdapter(Context context, List<ExerciseModel> exerciseModels, TrainingRecycleViewAdapter.OnItemClickListener listener) {
         this.context = context;
         this.exerciseModels = exerciseModels;
+        this.onItemClickListener = listener;
     }
 
     @NonNull

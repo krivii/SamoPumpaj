@@ -47,8 +47,8 @@ public class TrainingModel {
         this.lastVisit = lastVisit;
     }
 
-    public int getNumberOfVisits() {
-        return numberOfVisits;
+    public String getNumberOfVisits() {
+        return String.valueOf(numberOfVisits);
     }
 
     public void setNumberOfVisits(int numberOfVisits) {

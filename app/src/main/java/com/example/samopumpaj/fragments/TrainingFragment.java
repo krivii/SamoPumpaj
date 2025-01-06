@@ -14,15 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.samopumpaj.DB.DataBaseHelper;
 import com.example.samopumpaj.DB.TrainingModel;
+import com.example.samopumpaj.DB.WorkoutModel;
 import com.example.samopumpaj.MainActivity;
 import com.example.samopumpaj.R;
 import com.example.samopumpaj.RVAdapters.TrainingRecycleViewAdapter;
+import com.example.samopumpaj.RVAdapters.WorkoutRecycleViewAdapter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainingFragment extends Fragment {
+public class TrainingFragment extends Fragment implements TrainingRecycleViewAdapter.OnItemClickListener{
 
     private RecyclerView recyclerView;
     private TrainingRecycleViewAdapter trainingRecycleViewAdapter;
@@ -32,35 +34,6 @@ public class TrainingFragment extends Fragment {
 
     public TrainingFragment() {
         // Required empty public constructor
-    }
-
-    public static TrainingFragment newInstance(String param1, String param2) {
-        TrainingFragment fragment = new TrainingFragment();
-        Bundle args = new Bundle();
-        args.putString("param1", param1);
-        args.putString("param2", param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // Retrieve the workout data from the arguments
-            workoutId = getArguments().getInt("workoutId");
-        }
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        // Attach the FragmentTitleListener interface to the activity
-        if (context instanceof FragmentTitleListener) {
-            fragmentTitleListener = (FragmentTitleListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement FragmentTitleListener");
-        }
     }
 
     @Override
@@ -89,6 +62,46 @@ public class TrainingFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onItemClick(int position) {
+
+
+        TrainingModel selectedTraining = trainingModels.get(position);
+
+        ExerciseFragment exerciseFragment = new ExerciseFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("trainingId", selectedTraining.getId());
+
+        exerciseFragment.setArguments(bundle);
+        onDestroyView();
+
+
+        ((MainActivity) requireActivity()).loadFragment(exerciseFragment, "Exercises");
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            // Retrieve the workout data from the arguments
+            workoutId = getArguments().getInt("workoutId");
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        // Attach the FragmentTitleListener interface to the activity
+        if (context instanceof FragmentTitleListener) {
+            fragmentTitleListener = (FragmentTitleListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement FragmentTitleListener");
+        }
+    }
+
+
+
     private void setUpTrainingModels() {
         DataBaseHelper dbHelper = new DataBaseHelper(getContext());
         trainingModels = dbHelper.getAllTrainingsByWorkoutId(workoutId);
@@ -109,5 +122,13 @@ public class TrainingFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         fragmentTitleListener = null; // Clear the reference when the fragment is detached
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        for (int i = 0; i < trainingModels.size(); i++) {
+            trainingModels.set(i, null);
+        }
     }
 }

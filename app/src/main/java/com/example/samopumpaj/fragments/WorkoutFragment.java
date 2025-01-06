@@ -27,10 +27,6 @@ public class WorkoutFragment extends Fragment implements WorkoutRecycleViewAdapt
     private WorkoutRecycleViewAdapter workoutRecycleViewAdapter;
     private List<WorkoutModel> workoutModels;
 
-
-
-
-
     public WorkoutFragment() {
         // Required empty public constructor
     }
@@ -45,7 +41,6 @@ public class WorkoutFragment extends Fragment implements WorkoutRecycleViewAdapt
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        // Set up WorkoutModels
         setUpWorkoutModels();
         workoutRecycleViewAdapter = new WorkoutRecycleViewAdapter(getContext(), workoutModels, this);
         recyclerView.setAdapter(workoutRecycleViewAdapter);

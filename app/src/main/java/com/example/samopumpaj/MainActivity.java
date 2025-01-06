@@ -45,8 +45,16 @@ public class MainActivity extends AppCompatActivity implements FragmentTitleList
     // Method to handle clicks on training items
     public void onTrainingItemClick(int position) {
         // Load the ExerciseFragment when a training item is clicked
+        loadFragment(new ExerciseFragment(), "Exercise");
+    }
+
+    // Method to handle clicks on training items
+    public void onExerciseItemClick(int position) {
+        // Load the ExerciseFragment when a training item is clicked
         loadFragment(new ExerciseFragment(), "Exercise Details");
     }
+
+
 
     @Override
     public void updateTitle(String title) {
