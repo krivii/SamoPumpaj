@@ -29,7 +29,6 @@ public class ExerciseFragment extends Fragment implements ExerciseRecycleViewAda
     private RecyclerView recyclerView;
     private ExerciseRecycleViewAdapter exerciseRecycleViewAdapter;
     private List<ExerciseModel> exerciseModels;
-
     private int trainingId;
 
     public ExerciseFragment() {

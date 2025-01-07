@@ -1,6 +1,5 @@
 package com.example.samopumpaj.RVAdapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.samopumpaj.DB.ExerciseModel;
-import com.example.samopumpaj.DB.TrainingModel;
 import com.example.samopumpaj.R;
 import com.example.samopumpaj.fragments.SingleExerciseFragment;
 import java.util.List;

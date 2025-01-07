@@ -9,17 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.samopumpaj.DB.ExerciseModel;
 import com.example.samopumpaj.R;
 
 
 public class SingleExerciseRVAdapter extends RecyclerView.Adapter<SingleExerciseRVAdapter.ViewHolder> {
 
     Context context;
-    String [] exerciseValues;
+    ExerciseModel exerciseModel;
 
-    public SingleExerciseRVAdapter(Context context, String [] values) {
+    public SingleExerciseRVAdapter(Context context, ExerciseModel exerciseModel) {
         this.context = context;
-        this.exerciseValues = values;
+        this.exerciseModel = exerciseModel;
     }
 
     @NonNull
@@ -32,13 +33,15 @@ public class SingleExerciseRVAdapter extends RecyclerView.Adapter<SingleExercise
 
     @Override
     public void onBindViewHolder(@NonNull SingleExerciseRVAdapter.ViewHolder holder, int position) {
-        holder.tvExerciseValue.setText(exerciseValues[position]);
-        holder.tvTitle.setText("Title");
+        holder.tvExerciseValue.setText(exerciseModel.getTargetMuscle());
+        holder.tvTitle.setText(exerciseModel.getName());
+
+
     }
 
     @Override
     public int getItemCount() {
-        return exerciseValues.length;
+        return 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

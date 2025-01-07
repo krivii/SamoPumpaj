@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.samopumpaj.DB.DataBaseHelper;
+import com.example.samopumpaj.DB.ExerciseModel;
 import com.example.samopumpaj.R;
 import com.example.samopumpaj.RVAdapters.SingleExerciseRVAdapter;
 import com.example.samopumpaj.WeightPickerActivity;
@@ -20,7 +22,7 @@ public class SingleExerciseFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private SingleExerciseRVAdapter singleExerciseRecycleViewAdapter;
-    private String[] exerciseValues = new String[3];
+    private int exerciseId;
 
     public SingleExerciseFragment() {
         // Required empty public constructor
@@ -43,8 +45,10 @@ public class SingleExerciseFragment extends Fragment {
         recyclerView = view.findViewById(R.id.singleExerciseRV);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        setUpExerciseModels();
-        singleExerciseRecycleViewAdapter = new SingleExerciseRVAdapter(getContext(), exerciseValues);
+        DataBaseHelper dbHelper = new DataBaseHelper(getContext());
+        ExerciseModel exerciseModel = dbHelper.getExerciseById(exerciseId);
+
+        singleExerciseRecycleViewAdapter = new SingleExerciseRVAdapter(getContext(), exerciseModel);
         recyclerView.setAdapter(singleExerciseRecycleViewAdapter);
 
         // Find the ConstraintLayout and set the click listener
@@ -61,9 +65,13 @@ public class SingleExerciseFragment extends Fragment {
         return view;
     }
 
-    private void setUpExerciseModels() {
-
-        exerciseValues = getResources().getStringArray(R.array.exercise_values);
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            // Retrieve the workout data from the arguments
+            exerciseId = getArguments().getInt("exerciseId");
+        }
     }
+
 }
