@@ -7,26 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.samopumpaj.DB.ExerciseModel;
+import com.example.samopumpaj.DB.TrainingModel;
 import com.example.samopumpaj.R;
 import com.example.samopumpaj.fragments.SingleExerciseFragment;
-
 import java.util.List;
 
 public class ExerciseRecycleViewAdapter extends RecyclerView.Adapter<ExerciseRecycleViewAdapter.ViewHolder> {
 
     Context context;
     private List<ExerciseModel> exerciseModels;
-    private TrainingRecycleViewAdapter.OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
-    public ExerciseRecycleViewAdapter(Context context, List<ExerciseModel> exerciseModels, TrainingRecycleViewAdapter.OnItemClickListener listener) {
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public ExerciseRecycleViewAdapter(Context context, List<ExerciseModel> exerciseModels, OnItemClickListener listener) {
         this.context = context;
         this.exerciseModels = exerciseModels;
         this.onItemClickListener = listener;
@@ -41,9 +43,18 @@ public class ExerciseRecycleViewAdapter extends RecyclerView.Adapter<ExerciseRec
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ExerciseRecycleViewAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.tvExerciseName.setText(exerciseModels.get(position).getName());
-        holder.tvDate.setText(exerciseModels.get(position).getLastUpdate().toString());
+    public void onBindViewHolder(@NonNull ExerciseRecycleViewAdapter.ViewHolder holder, int position) {
+
+        ExerciseModel exerciseModel = exerciseModels.get(position);
+        holder.tvExerciseName.setText(exerciseModel.getName());
+        holder.tvDate.setText(exerciseModel.getLastUpdate());
+
+        // Set click listener on the entire item view
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(position);
+            }
+        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +90,6 @@ public class ExerciseRecycleViewAdapter extends RecyclerView.Adapter<ExerciseRec
         TextView tvExerciseName, tvDate;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             tvExerciseName = itemView.findViewById(R.id.exerciseName_textView);
             tvDate = itemView.findViewById(R.id.exerciseDate_textView);
         }

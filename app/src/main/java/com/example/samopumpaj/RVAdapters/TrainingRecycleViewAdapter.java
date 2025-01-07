@@ -5,15 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.samopumpaj.DB.TrainingModel;
-import com.example.samopumpaj.DB.WorkoutModel;
 import com.example.samopumpaj.R;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class TrainingRecycleViewAdapter extends RecyclerView.Adapter<TrainingRecycleViewAdapter.ViewHolder> {

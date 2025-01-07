@@ -34,6 +34,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_KILO = "kilos";
     private static final String COLUMN_DATE_TIME = "dateTime";
     public static final String WORKOUT_FK = "workoutFk";
+    public static final String TRAINING_FK = "trainingFk";
 
     // Constructor
     public DataBaseHelper(@Nullable Context context) {
@@ -153,7 +154,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             do {
                 TrainingModel training = new TrainingModel();
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                Pair<Integer, String> visitPair = getTrainingVisits(id); //TODO: tukaj pade.
+                Pair<Integer, String> visitPair = getTrainingVisits(id);
 
                 training.setId(id);
                 training.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
@@ -246,7 +247,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 exercise.setTargetMuscle(cursor.getString(cursor.getColumnIndex("targetMuscle")));
                 exercise.setVideoLink(cursor.getString(cursor.getColumnIndex("videoLink")));
                 exercise.setOrderNumber(cursor.getInt(cursor.getColumnIndex("orderNumber")));
-                exercise.setTrainingFk(cursor.getInt(cursor.getColumnIndex("trainingId")));
+                exercise.setTrainingFk(cursor.getInt(cursor.getColumnIndex(TRAINING_FK)));
+                exercise.setLastUpdate(getLastVisit(exercise.getId()));
 
                 // Add the exercise to the list
                 exerciseList.add(exercise);
@@ -258,6 +260,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return exerciseList;
+    }
+
+    public String getLastVisit(int exerciseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Get the most recent visit date (lastVisit) with the same exerciseFk
+        String lastVisitQuery = "SELECT dateTime FROM " + TABLE_RECORD + " WHERE exerciseFk = ? ORDER BY dateTime DESC LIMIT 1";
+        Cursor lastVisitCursor = db.rawQuery(lastVisitQuery, new String[]{String.valueOf(exerciseId)});
+        String lastVisit = null;
+        if (lastVisitCursor.moveToFirst()) {
+            String dateTimeString = lastVisitCursor.getString(0);
+            LocalDateTime dateTime = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                dateTime = LocalDateTime.parse(dateTimeString, inputFormatter);
+                lastVisit = dateTime.format(outputFormatter);
+            }
+        } else return "1.1.2000";
+
+        lastVisitCursor.close();
+        db.close();
+
+        return lastVisit;
     }
 
     @SuppressLint("Range")
@@ -276,7 +302,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             exercise.setTargetMuscle(cursor.getString(cursor.getColumnIndex("targetMuscle")));
             exercise.setVideoLink(cursor.getString(cursor.getColumnIndex("videoLink")));
             exercise.setOrderNumber(cursor.getInt(cursor.getColumnIndex("orderNumber")));
-            exercise.setTrainingFk(cursor.getInt(cursor.getColumnIndex("trainingId")));
+            exercise.setTrainingFk(cursor.getInt(cursor.getColumnIndex(TRAINING_FK)));
         }
 
         // Close the cursor and the database

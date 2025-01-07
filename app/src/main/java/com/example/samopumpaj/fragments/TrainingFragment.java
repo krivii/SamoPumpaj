@@ -52,10 +52,7 @@ public class TrainingFragment extends Fragment implements TrainingRecycleViewAda
         trainingRecycleViewAdapter = new TrainingRecycleViewAdapter(
                 getContext(),
                 trainingModels,
-                position -> {
-                    // Call the MainActivity method on item click
-                    ((MainActivity) getActivity()).onTrainingItemClick(position);
-                }
+    this
         );
         recyclerView.setAdapter(trainingRecycleViewAdapter);
 
@@ -64,7 +61,6 @@ public class TrainingFragment extends Fragment implements TrainingRecycleViewAda
 
     @Override
     public void onItemClick(int position) {
-
 
         TrainingModel selectedTraining = trainingModels.get(position);
 

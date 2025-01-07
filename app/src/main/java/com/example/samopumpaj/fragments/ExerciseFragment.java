@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.samopumpaj.DB.DataBaseHelper;
 import com.example.samopumpaj.DB.ExerciseModel;
+import com.example.samopumpaj.DB.TrainingModel;
 import com.example.samopumpaj.MainActivity;
 import com.example.samopumpaj.RVAdapters.ExerciseRecycleViewAdapter;
 import com.example.samopumpaj.R;
@@ -23,12 +24,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExerciseFragment extends Fragment {
+public class ExerciseFragment extends Fragment implements ExerciseRecycleViewAdapter.OnItemClickListener{
 
     private RecyclerView recyclerView;
     private ExerciseRecycleViewAdapter exerciseRecycleViewAdapter;
     private List<ExerciseModel> exerciseModels;
-    //private FragmentTitleListener titleListener;
+
     private int trainingId;
 
     public ExerciseFragment() {
@@ -48,25 +49,36 @@ public class ExerciseFragment extends Fragment {
         exerciseRecycleViewAdapter =  new ExerciseRecycleViewAdapter(
                 getContext(),
                 exerciseModels,
-                position -> {
-                    // Call the MainActivity method on item click
-                    //((MainActivity) getActivity()).onExerciseItemClick(position);
-                }
-        );
+                this );
 
         recyclerView.setAdapter(exerciseRecycleViewAdapter);
 
         return view;
     }
 
-    public static ExerciseFragment newInstance(String param1, String param2) {
+    @Override
+    public void onItemClick(int position) {
+
+        ExerciseModel selectedExercise = exerciseModels.get(position);
+
+        SingleExerciseFragment singleExerciseFragment = new SingleExerciseFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("exerciseId", selectedExercise.getId());
+
+        singleExerciseFragment.setArguments(bundle);
+        onDestroyView();
+
+        ((MainActivity) requireActivity()).loadFragment(singleExerciseFragment, "Exercise details");
+    }
+
+    /*public static ExerciseFragment newInstance(String param1, String param2) {
         ExerciseFragment fragment = new ExerciseFragment();
         Bundle args = new Bundle();
         args.putString("param1", param1);
         args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
 
     /*@Override
@@ -93,7 +105,7 @@ public class ExerciseFragment extends Fragment {
 
     private void setUpExerciseModels() {
         DataBaseHelper dbHelper = new DataBaseHelper(getContext());
-        exerciseModels = dbHelper.getAllExercisesByTrainingId(trainingId); //TODO: treba nafilat trainingid!
+        exerciseModels = dbHelper.getAllExercisesByTrainingId(trainingId);
     }
 
     @Override
